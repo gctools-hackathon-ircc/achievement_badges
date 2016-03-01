@@ -10,19 +10,19 @@ do all calculations here to send to layout.php to display
 $user = elgg_get_page_owner_entity();
 
 //if badge is not set, give them nothing
-if(!isset($user->discussionBadge)){
-    $user->discussionBadge = 0;
+if(!isset($user->colleagueBadge)){
+    $user->colleagueBadge = 0;
 }
 
-$name = 'discussion';
+$name = 'colleague';
 
 //get badge images
-$badges[0] = 'mod/achievement_badges/graphics/discussionBadgeLvl00.png';
-$badges[1] = 'mod/achievement_badges/graphics/discussionBadgeLvl01.png';
-$badges[2] = 'mod/achievement_badges/graphics/discussionBadgeLvl02.png';
-$badges[3] = 'mod/achievement_badges/graphics/discussionBadgeLvl03.png';
-$badges[4] = 'mod/achievement_badges/graphics/discussionBadgeLvl04.png';
-
+$badges[0] = 'mod/achievement_badges/graphics/colleagueBadgeLvl00.png';
+$badges[1] = 'mod/achievement_badges/graphics/colleagueBadgeLvl01.png';
+$badges[2] = 'mod/achievement_badges/graphics/colleagueBadgeLvl02.png';
+$badges[3] = 'mod/achievement_badges/graphics/colleagueBadgeLvl03.png';
+$badges[4] = 'mod/achievement_badges/graphics/colleagueBadgeLvl04.png';
+$badges[5] = 'mod/achievement_badges/graphics/colleagueBadgeLvl05.png';
 
 //set current badge
 $currentBadge = $badges[0];
@@ -30,12 +30,16 @@ $currentBadge = $badges[0];
 //set level to zero
 $level = '1';
 
+//static
+$title = 'Colleague Badge';
+$description = 'You are connecting with your colleagues';
+
 //set goals for badge
 $goals[0] = 1;
 $goals[1] = 2;
 $goals[2] = 3;
 $goals[3] = 4;
-
+$goals[4] = 5;
 
 
 $currentGoal = $goals[0];
@@ -47,13 +51,16 @@ $count = '0';
 
 
 /////
-$entities = elgg_get_entities(array(
-    'type' => 'object',
-    'subtype' => 'groupforumtopic',
-    'owner_guid' => $user->getGUID(),
-));
+$entities = $user->getFriends(array('limit' => 0));
 
 if($entities){
+    
+    /*
+    foreach($entities as $ent){
+        $likeCount = $likeCount + $ent->countAnnotations('likes');
+    }
+    */
+    //echo $likeCount;
     
     $count = count($entities);
 }
@@ -64,14 +71,14 @@ if($entities){
 //progress check
 if($count < $goals[0]){ //no badge
     
-    $user->discussionBadge = 0;
+    $user->colleagueBadge = 0;
     $currentBadge = $badges[0];
     $currentGoal = $goals[0];
     $level = '1';
     
 } else if($count >= $goals[0] && $count < $goals[1]){ //lvl 1
     
-    $user->discussionBadge = 1;
+    $user->colleagueBadge = 1;
     $currentBadge = $badges[1];
     $currentGoal = $goals[1];
     $level = '2';
@@ -79,7 +86,7 @@ if($count < $goals[0]){ //no badge
 } else if($count >= $goals[1]  && $count < $goals[2]){ //lvl 2
     
     //$count = $goals[2];
-    $user->discussionBadge = 2;
+    $user->colleagueBadge = 2;
     $currentBadge = $badges[2];
     $currentGoal = $goals[2];
     $level = '3';
@@ -87,33 +94,37 @@ if($count < $goals[0]){ //no badge
 } else if($count >= $goals[2]  && $count < $goals[3]){ //lvl 3
     
     //$count = $goals[2];
-    $user->discussionBadge = 3;
+    $user->colleagueBadge = 3;
     $currentBadge = $badges[3];
     $currentGoal = $goals[3];
     $level = '4';
     
-} else if($count >= $goals[3]){ //lvl 4
+} else if($count >= $goals[3]  && $count < $goals[4]){ //lvl 4
     
-    $count = $goals[3];
-    $user->discussionBadge = 4;
+    //$count = $goals[2];
+    $user->colleagueBadge = 4;
     $currentBadge = $badges[4];
-    $currentGoal = $goals[3];
-    $level = 'Completed';
+    $currentGoal = $goals[4];
+    $level = '5';
     
-} 
-
-/*
-if(!isset($user->discussionCount)){
-    $user->discussionCount = $count;
+} else if($count >= $goals[4] ){ //lvl 5
+    
+    $user->colleagueBadge = 5;
+    $count = $goals[4];
+    $currentBadge = $badges[5];
+    $currentGoal = $goals[4];
+    $level = 'Completed';
 }
 
-if($user->discussionCount > $count){
+if(!isset($user->colleagueCount)){
+    $user->colleagueCount = $count;
+}
+
+if($user->colleagueCount > $count){
     //keep count the same to not lose progress
 } else {
-    $user->discussionCount = $count;
+    $user->colleagueCount = $count;
 }
-*/
-
 
 $title = elgg_echo('badge:' . $name . ':name');
 $description =  elgg_echo('badge:' . $name . ':objective', array($currentGoal));
