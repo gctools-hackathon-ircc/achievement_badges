@@ -1,0 +1,8 @@
+{
+    "name": "gctools-hackathon-ircc/achievement_badges",
+    "type": "elgg-plugin",
+    "require": {
+        "composer/installers": ">=1.0.8"
+    },
+    "license": "CC-BY-3.0"
+}
